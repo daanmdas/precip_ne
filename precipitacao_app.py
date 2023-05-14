@@ -1,7 +1,6 @@
 import pandas as pd
 import numpy as np
 import datetime as dt
-import geopandas
 from PIL import Image
 import plotly.graph_objects as go
 import streamlit as st
