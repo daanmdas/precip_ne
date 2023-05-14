@@ -5,4 +5,3 @@ DateTime
 folium
 streamlit
 streamlit-folium
-PIL
