@@ -5,3 +5,4 @@ DateTime
 folium
 streamlit
 streamlit-folium
+fsspec
