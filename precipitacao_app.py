@@ -78,7 +78,8 @@ def dados_parametrizados(pestrela = 0.99):
 
     return inicial, df
 
-inicial, df = dados_parametrizados()
+df = pd.read_csv('https://raw.githubusercontent.com/daanmdas/precip_ne/main/parametros_iniciais.csv')
+inicial = df.loc[df['Mes'] == dt.datetime.now().month]
 
 retorno = int(st.sidebar.text_input(label = "Periodo de Retorno (Anos)", value= 100))
 
@@ -226,6 +227,3 @@ with aba3:
     else:
 
         st.text('Escolha uma cidade para visualizar a previsão de precipitação ao longo do ano')
-
-
-
