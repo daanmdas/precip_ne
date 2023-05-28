@@ -23,10 +23,10 @@ def dados():
 
 parametros = dados()
 
-pestrela = 0.99
+pestrela = 0.9
 
 @st.cache_data()
-def dados_parametrizados(pestrela = 0.99):
+def dados_parametrizados(pestrela = 0.9):
 
     w = np.arange(1, 13, 1) 
     w1 = np.cos((2 * np.pi * w) / 12)
@@ -81,11 +81,11 @@ def dados_parametrizados(pestrela = 0.99):
 df = pd.read_csv('https://raw.githubusercontent.com/daanmdas/precip_ne/main/parametros_iniciais.csv')
 inicial = df.loc[df['Mes'] == dt.datetime.now().month]
 
-retorno = int(st.sidebar.text_input(label = "Periodo de Retorno (Anos)", value= 100))
+retorno = int(st.sidebar.text_input(label = "Periodo de Retorno (Anos)", value= 10))
 
 pestrela = 1 - 1 / retorno
 
-if pestrela != 0.99:
+if pestrela != 0.9:
 
     inicial, df = dados_parametrizados(pestrela)
 
