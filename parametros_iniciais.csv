@@ -1,4 +1,4 @@
-"chave","Cidade","UF","lat","lon","Mes","Predito","Limite.Inferior","Limite.Superior","codigo","nome_mes"
+"chave","Cidade","UF","lat","lon","Mes","Predito","Limite Inferior","Limite Superior","codigo","nome_mes"
 "AGUA BRANCA - AL","AGUA BRANCA "," AL",-9.26472222,-37.93805555,12,37.02,34.8,39.63,"2700102","Dez"
 "AGUA BRANCA - AL","AGUA BRANCA "," AL",-9.26472222,-37.93805555,11,30.42,27.86,32.7,"2700102","Nov"
 "AGUA BRANCA - AL","AGUA BRANCA "," AL",-9.26472222,-37.93805555,10,28.83,26.93,30.89,"2700102","Out"
