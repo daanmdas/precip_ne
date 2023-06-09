@@ -15,80 +15,32 @@ st.set_page_config(layout='wide',
                    page_icon = im)
 
 @st.cache_data()
-def dados():
+def param():
         
     parametros = pd.read_csv("https://raw.githubusercontent.com/daanmdas/precip_ne/main/parametros.csv")
-
+    
     return parametros
 
-parametros = dados()
-
-pestrela = 0.9
+parametros = param()
 
 @st.cache_data()
-def dados_parametrizados(pestrela = 0.9):
-
-    w = np.arange(1, 13, 1) 
-    w1 = np.cos((2 * np.pi * w) / 12)
-    w2 = np.sin((2 * np.pi * w ) / 12)
-    
-    chaves = parametros['chave'].unique()
-
-    pquantil = 0.99
-    medianqestrela = np.zeros(len(w))
-    liqestrela = np.zeros(len(w))
-    lsqestrela = np.zeros(len(w))
-
-    inicial = pd.DataFrame(data = {'chave':['i'], 'cidade': ['i'], 'uf': ['i'], 'lat': [0], 'lon': [0], 'mediaqestrela':[0],
-                                'limsupqest': [0], 'liminfqest': [0]})
-    for j in chaves:
-        
-        lat = parametros.loc[parametros['chave'] == j]['lat'].max()
-        lon = parametros.loc[parametros['chave'] == j]['lon'].max()
-        cidade = parametros.loc[parametros['chave'] == j]['cid'].unique()[0]
-        uf = parametros.loc[parametros['chave'] == j]['UF'].unique()[0]
-        
-        for i in range(0, len(w)):
-
-            qu = (parametros.loc[parametros['chave'] == j]['beta0qumc'] + 
-            parametros.loc[parametros['chave'] == j]['beta1qumc'] * w1[i] + 
-            parametros.loc[parametros['chave'] == j]['beta2qumc'] * w2[i])
-
-            sigma = np.exp(parametros.loc[parametros['chave'] == j]['beta0sigmamcb'] + 
-                        parametros.loc[parametros['chave'] == j]['beta1sigmamcb'] * w1[i] + 
-                        parametros.loc[parametros['chave'] == j]['beta2sigmamcb'] * w2[i])
-
-            xi = np.exp(parametros.loc[parametros['chave'] == j]['beta0ximcb'] + 
-                        parametros.loc[parametros['chave'] == j]['beta1ximcb'] * w1[i] + 
-                        parametros.loc[parametros['chave'] == j]['beta2ximcb'] * w2[i]) - 1
-
-            pred = qu + (sigma / xi) * (((-np.log(pestrela)) ** -xi) - ((-np.log(pquantil)) ** -xi))
-
-            a = pd.DataFrame(data = {'chave': [j], 'cidade': [cidade], 'uf': [uf], 'lat': [lat], 'lon': [lon], 'mes': [w[i]],
-                                    'mediaqestrela': [np.quantile(pred, 0.5).max()],
-                                    'liminfqest': [np.quantile(pred, 0.025).max()],
-                                    'limsupqest': [np.quantile(pred, 0.975).max()]})
-            inicial = pd.concat([a, inicial])
-    df = inicial.loc[inicial['cidade'] != 'i']
-    df['mediaqestrela'] = df['mediaqestrela'].round(2)
-    df['liminfqest'] = df['liminfqest'].round(2)
-    df['limsupqest'] = df['limsupqest'].round(2)
-    df.columns = ['chave', 'Cidade', 'UF', 'lat', 'lon', 'Mes', 'Predito', 'Limite Inferior', 'Limite Superior']
+def dados_parametrizados(dados, retorno = 10):
+  
+    df = dados.loc[dados['Retorno'] == retorno]
     inicial = df.loc[df['Mes'] == dt.datetime.now().month]
-
+  
     return inicial, df
 
-df = pd.read_csv('https://raw.githubusercontent.com/daanmdas/precip_ne/main/parametros_iniciais.csv')
-inicial = df.loc[df['Mes'] == dt.datetime.now().month]
+dados = pd.read_csv('https://raw.githubusercontent.com/daanmdas/precip_ne/main/retorno.csv')
 
 retorno = int(st.sidebar.text_input(label = "Periodo de Retorno (Anos)", value= 10))
 
-pestrela = 1 - 1 / retorno
+df = dados.loc[dados['Retorno'] == retorno]
+inicial = df.loc[df['Mes'] == dt.datetime.now().month]
 
-if pestrela != 0.9:
+if retorno != 10:
 
-    inicial, df = dados_parametrizados(pestrela)
-
+    inicial, df = dados_parametrizados(dados, retorno)
 
 uf = parametros['UF'].unique()
 cidades = parametros['cid'].unique()
@@ -204,9 +156,9 @@ with aba3:
     
                 w1 = np.cos((2 * np.pi * mes) / 12)
                 w2 = np.sin((2 * np.pi * mes ) / 12)
-                qu = (parametros.loc[parametros['cid'] == escolha_cidade]['beta0qumc'] + 
-                    parametros.loc[parametros['cid'] == escolha_cidade]['beta1qumc'] * w1 + 
-                    parametros.loc[parametros['cid'] == escolha_cidade]['beta2qumc'] * w2)
+                qu = (parametros.loc[parametros['cid'] == escolha_cidade]['beta0qumcb'] + 
+                    parametros.loc[parametros['cid'] == escolha_cidade]['beta1qumcb'] * w1 + 
+                    parametros.loc[parametros['cid'] == escolha_cidade]['beta2qumcb'] * w2)
 
                 sigma = np.exp(parametros.loc[parametros['cid'] == escolha_cidade]['beta0sigmamcb'] + 
                             parametros.loc[parametros['cid'] == escolha_cidade]['beta1sigmamcb'] * w1 + 
