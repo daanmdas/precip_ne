@@ -168,10 +168,10 @@ with aba3:
                             parametros.loc[parametros['cid'] == escolha_cidade]['beta1ximcb'] * w1 + 
                             parametros.loc[parametros['cid'] == escolha_cidade]['beta2ximcb'] * w2) - 1
 
-                pestrela_calc = np.exp(-(((-np.log(0.99)) ** -xi ) + (xi * ((valor - qu) / sigma))) ** (-1 / xi))
-                pestrela_calc = np.quantile(pestrela_calc, 0.5)
-                retorno = 1 / (1 - pestrela_calc)
-                st.sidebar.metric('Periodo de Retorno (Anos)',  int(round(retorno,0)), f'{round((1 - pestrela_calc) * 100, 4)} %')
+                pestrela_calc = round(np.quantile(np.exp(-(((-np.log(0.95)) ** -xi ) + (xi * ((valor - qu) / sigma))) ** (-1 / xi)), 0.5),4)
+                retorno = round(1 / (1-pestrela_calc), 0)
+                prob = round((1 - pestrela_calc) * 100, 4) 
+                st.sidebar.metric('Periodo de Retorno (Anos)',  int(retorno), f'{prob} %')
 
             except:
                 st.error('Preencha as informações necessárias ao lado')
